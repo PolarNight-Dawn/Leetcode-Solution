@@ -43,7 +43,7 @@ ListNode* cur = l1;
 
 ### Code&Analysis
 
-<old>
+#### old
 
 由于使用int，导致当测试用例过大时，结果崩溃
 
@@ -98,7 +98,7 @@ public:
 };
 ```
 
-<new>
+#### new
 
 这里将链表翻转的操作时间和空间开销都很大
 
@@ -189,7 +189,7 @@ public:
 
 ### Code&Analysis
 
-<old>
+#### old
 
 时间复杂度较高，不太适合长字符串的处理，同时代码中使用了一个很大的数组a，会占用大量的内存空间
 
@@ -249,7 +249,7 @@ public:
         return num*/
 ```
 
-<new>
+#### new
 
 这种方法的时间复杂度为O(n)，空间复杂度为O(1)或O(min(n,m))，其中m表示字符集的大小
 
@@ -275,7 +275,7 @@ public:
 };
 ```
 
-<modify>
+#### modify
 
 ```C++
 class Solution {
@@ -348,6 +348,133 @@ public:
             median = num[(size + 1) / 2 - 1];
         }
         return median;
+    }
+};
+```
+
+## 5.最长回文子串(rewrite)
+
+### Thought
+
+使用动态规划（Dynamic Programming）的思想，来减少运行时间。
+
+具体来说，我们可以使用一个二维数组$dp$，其中 $dp[i][j]$ 表示字符串 $s$ 中从 $i$ 到 $j$ 的子串是否为回文串。对于任意一个子串 $s[i, j]$，如果该子串是回文串，那么它的左右两端分别减少一个字符仍然是回文串，即 $dp[i + 1][j - 1]$ 为真，且 $s[i] = s[j]$。
+
+根据这个思路，我们可以使用一个变量 $maxLen$ 来记录当前找到的最长回文子串的长度，以及最长回文子串的起始位置 $start$。在更新 $dp$ 数组时，如果当前子串是回文串并且长度大于 $maxLen$，那么就更新 $maxLen$ 和 $start$。
+
+### Doubts&Gains
+
+> `interrupted by signal 9: SIGKILL`这个错误信息通常表示进程被操作系统强制终止了。SIGKILL是一种用于向进程发送强制终止信号的系统信号。当进程消耗过多的系统资源或者执行时间过长时，操作系统可能会发送SIGKILL信号，以避免系统崩溃或出现其他问题。因此，如果程序收到了这个信号，就说明它已经被操作系统强制终止了。
+
+> 动态规划是一种算法思想，通常用于解决具有重叠子问题和最优子结构性质的问题。动态规划算法将原问题分解成若干个子问题，先求解子问题，再由子问题的解得到原问题的解。
+>
+> 动态规划算法的基本思想是利用子问题的最优解来推导出原问题的最优解。它通常采用自底向上的方式，先求解最小的子问题，然后逐步求解更大的子问题，最终得到原问题的解。
+>
+> 动态规划算法常常使用一个表格来存储已经解决的子问题的最优解，以避免重复计算。这种表格通常被称为动态规划表或者状态转移表。
+
+动态规划算法可以用于求解一些著名的问题，例如背包问题、最长公共子序列问题、最短路径问题、最优二叉搜索树问题等。
+
+### Code&Analysis
+
+```C++
+class Solution {
+public:
+    string longestPalindrome(string s) {
+        int n = s.length();
+        if (n < 2) {
+            return s;
+        }
+
+        int start = 0, maxLen = 1;
+        vector<vector<bool>> dp(n, vector<bool>(n, false));
+
+        for (int i = n-1; i >= 0; i--) {
+            for (int j = i; j < n; j++) {
+                if (s[i] == s[j]) {
+                    if (j - i < 2) {
+                        dp[i][j] = true;
+                    } else {
+                        dp[i][j] = dp[i+1][j-1];
+                    }
+                } else {
+                    dp[i][j] = false;
+                }
+
+                if (dp[i][j] && j - i + 1 > maxLen) {
+                    start = i;
+                    maxLen = j - i + 1;
+                }
+            }
+        }
+
+        return s.substr(start, maxLen);
+    }
+};
+```
+
+## 6.N字形变换
+
+### Thought
+
+使用二维数组将字符串按Z字形储存，顺序遍历
+
+### Doubts&Gains
+
+> vector二维数组
+
+### Code&Analysis
+
+执行时间太长了，消耗内存过多
+
+```c++
+class Solution {
+public:
+    string convert(string s, int numRows) {
+        int n = s.length();
+        vector<vector<char>> buffer (numRows, vector<char>(n, '\0'));
+
+        if (numRows == 1) {
+            return s;
+        }
+        //Z字储存
+        int cnt = 0;
+        bool eof = false;
+        while (cnt <= n - 1) {
+            for (int i = 0; i < n; i++) {
+                if (eof) {
+                    break;
+                }
+                int jud = i % (numRows - 1);
+                if (jud == 0) {
+                    for (int j = 0; j < numRows; j++) {
+                        if (cnt > n - 1) {
+                            eof = true;
+                            break;
+                        }
+                        buffer[j][i] = s[cnt];
+                        cnt++;
+                    }
+                } else {
+                    if (cnt > n - 1) {
+                        eof = true;
+                        break;
+                    }
+                    buffer[numRows - jud - 1][i] = s[cnt];
+                    cnt++;
+                }
+            }
+        }
+
+        //顺序遍历
+        string str = "";
+        for (int i = 0; i < numRows; i++) {
+            for (int j = 0; j < n; j++) {
+                if (buffer[i][j] != '\0') {
+                    str.push_back(buffer[i][j]);
+                }
+            }
+        }
+        return str;
     }
 };
 ```
