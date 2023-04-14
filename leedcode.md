@@ -479,3 +479,104 @@ public:
 };
 ```
 
+## 7.整数翻转
+
+### Thought
+
+将一个整数拆分成数字，存入vector digit中，按某种顺序取出反转整数
+
+### Doubts&Gains
+
+> 在 C++ 中，`abs()` 是一个数学函数，用于计算一个整数或浮点数的绝对值。在 C++ 中，`abs()` 是一个数学函数，用于计算一个整数或浮点数的绝对值。`abs()` 函数返回的结果为一个非负数，即输入参数的绝对值。如果输入参数为负数，则返回其相反数。
+
+需要注意的是，`abs()` 函数的参数必须是一个数字类型，否则会导致编译错误。如果需要计算复数或其他类型的数值的模或大小，请使用适当的数学库函数。
+
+> 在C++中，`pow()`是一个数学函数，用于计算一个数的指定次幂。
+
+- 需要注意的是，`pow()` 函数的参数和返回值都是浮点数类型。
+- 需要注意的是，如果底数或指数非常大，`pow()` 函数可能会产生精度问题。如果需要高精度计算，可以使用其他的数学库函数或者自行实现高精度计算。
+
+>`digits.insert()` 是 C++ 中向容器中插入元素的方法之一，用于向一个容器中插入元素。`digits.insert(digits.begin(), digit)`中`digits.begin()` 作为 `insert()` 函数的第一个参数，表示要在容器开头位置插入元素；`digit` 作为 `insert()` 函数的第二个参数，表示要插入的元素值。
+
+```C++
+// 在指定位置插入一个元素
+iterator insert(const_iterator pos, const T& value);
+
+// 在指定位置插入 n 个元素，元素值都为 value
+void insert(const_iterator pos, size_type n, const T& value);
+
+// 在指定位置插入区间 [first, last) 中的所有元素
+template <class InputIt>
+void insert(const_iterator pos, InputIt first, InputIt last);
+
+// 在容器末尾插入一个元素
+void push_back(const T& value);
+```
+
+
+
+>`static_cast<目标类型>(要转换的值)`是 C++ 中的一种类型转换方式，用于将一种类型的值转换为另一种类型。
+
+需要注意的是，在进行类型转换时，需要确保转换是安全和合法的。如果类型转换不合法，编译器可能会给出警告或错误提示。
+
+### Code&Analysis
+
+执行时间还行，这段时间最高了--击败了44.66%，而消耗内存一如既往的大。。。
+
+```C++
+class Solution {
+public:
+    int reverse(int x) {
+        int num = 0;
+        int res = 0;
+        double virRes = 0.0;
+        bool jud = false;
+        if (x > 0) {
+            num = x;
+        } else if (x == 0 | x == -2147483648) {
+            return res;
+        } else {
+            num = abs(x);
+            jud = true;
+        }
+
+        vector<int> digits;
+        while (num > 0) {
+            int digit = num % 10;
+            digits.insert(digits.begin(), digit);
+            num /= 10;
+        }
+
+        int len = digits.size();
+        if (digits[len - 1] == 0) {
+            for (int i = len - 2; i >= 0; i--) {
+                double result = pow(10, i);
+                virRes += digits[i] * result;
+                if (virRes > 2147483647) {
+                    return 0;
+                }
+                res = static_cast<int>(virRes);
+            }
+        } else {
+            for (int i = len - 1; i >= 0; i--) {
+                double result = pow(10, i);
+                virRes += digits[i] * result;
+                if (virRes > 2147483647) {
+                    return 0;
+                }
+                res = static_cast<int>(virRes);
+            }
+        }
+
+        if (res > 2147483647 | res < -2147483648) {
+            return 0;
+        } else {
+            if (jud) {
+                return -res;
+            }
+            return res;
+        }
+    }
+};
+```
+
