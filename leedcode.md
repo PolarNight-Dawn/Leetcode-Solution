@@ -580,3 +580,183 @@ public:
 };
 ```
 
+## 8.字符串转换整数💕 
+
+### Thought
+
+1. 读入字符串并丢弃无用的前导空格
+2. 检查下一个字符（假设还未到字符末尾）为正还是负号，读取该字符（如果有）。 确定最终结果是负数还是正数。 如果两者都不存在，则假定结果为正。
+3. 读入下一个字符，直到到达下一个非数字字符或到达输入的结尾。字符串的其余部分将被忽略。
+4. 将前面步骤读入的这些数字转换为整数（即，"123" -> 123， "0032" -> 32）。如果没有读入数字，则整数为 `0` 。必要时更改符号（从步骤 2 开始）。
+5. 如果整数数超过 32 位有符号整数范围 `[−2^31^, 2^31^ − 1]` ，需要截断这个整数，使其保持在这个范围内。具体来说，小于 `−231` 的整数应该被固定为 `−2^31^` ，大于 `2^31^ − 1` 的整数应该被固定为 `2^31^ − 1` 。
+6. 返回整数作为最终结果。
+
+### Doubts&Gains
+
+> `std::isspace()`
+
+
+
+> `buffer.at(i)`
+
+
+
+> long int size_t int
+
+
+
+### Code&Analysis
+
+运行时间击败百分百，消耗内存击败24.89%，取得新高😍😍😍
+
+```C++
+class Solution {
+public:
+    int myAtoi(string s) {
+        size_t i = 0;
+        size_t len = s.length();
+        while (i < len && isspace((s.at(i)))) {
+            ++i;
+        }
+
+        bool flag = false;
+        if (s[i] == '-') {
+            ++i;
+            flag = true;
+        } else if (s[i] == '+') {
+            ++i;
+        }
+
+        s = s.substr(i) ;
+        int64_t result = 0;
+        for (char c : s) {
+            if (c >= '0' && c <= '9') {
+                result = result * 10 + (c - '0');
+                if (result > 2147483648) {
+                    result = 2147483648;
+                    break;
+                }
+            } else {
+                break;
+            }
+        }
+
+        if (flag) {
+            return int(0 - result);
+        }
+        if (result == 2147483648) {
+            result = 2147483647;
+        }
+        return int(result);
+    }
+};
+```
+
+## 9.回文数
+
+### Thought
+
+#### old：
+
+
+
+#### new:
+
+数字的一半反转，然后将反转后的一半与原始数字的另一半进行比较，如果它们是相同的，那么这个数字就是回文
+
+### Doubts&Gains
+
+
+
+### Code&Analysis
+
+#### old
+
+```C++
+class Solution {
+public:
+    bool isPalindrome(int x) {
+        vector<char> buffer;
+        if (x < 0) {
+            return false;
+        }
+        if (x == 0) {
+            return true;
+        }
+
+        int cnt = 0;
+        while (x > 0) {
+            int result = x % 10;
+            char c = static_cast<char>(result + '0');
+            buffer.push_back(c);
+            x /= 10;
+            cnt++;
+        }
+
+        int len = buffer.size();
+        int i = 0, j = len - 1;
+        bool flag = (cnt % 2 == 0) ? true : false;
+        while (i != j) {
+            if (flag) {
+                if (buffer[i] != buffer[j]) {
+                    return false;
+                }
+                if (i + 1 != j) {
+                    i++;
+                    j--;
+                } else {
+                    i = j;
+                }
+            } else {
+                if (buffer[i] != buffer[j]) {
+                    return false;
+                }
+                i++;
+                j--;
+            }
+        }
+        return true;
+    }
+};
+```
+
+#### new
+
+```C++
+class Solution {
+public:
+    bool isPalindrome(int x) {
+        if (x < 0) {
+            return false;
+        }
+
+        string s = to_string(x);
+        string r = s;
+        reverse(r.begin(), r.end());
+
+        return s == r;
+    }
+};
+```
+
+#### modify
+
+```C++
+class Solution {
+public:
+    bool isPalindrome(int x) {
+        if (x < 0 || (x % 10 == 0 && x != 0)) {
+            return false;
+        }
+
+        int revertedNumber = 0;
+        while (x > revertedNumber) {
+            revertedNumber = revertedNumber * 10 + x % 10;
+            x /= 10;
+        }
+
+        return x == revertedNumber || x == revertedNumber / 10;
+    }
+};
+```
+
