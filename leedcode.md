@@ -77,22 +77,10 @@ public:
 
 ### Doubts&Gains
 
-链表的底层原理
-
-链表逆序插入，顺序取出
-
-链表的基本操作
-
-插入
+> 插入 将新节点插入到已有链表的头部`ListNode* cur = new ListNode(val);cur->next = l3;l3 = cur;`
+> 创建一个新的链表，并将新节点作为链表的头节点`ListNode *head = new ListNode(val);`
 
 ```C++
-//将新节点插入到已有链表的头部
-ListNode* cur = new ListNode(val);
-cur->next = l3;
-l3 = cur;
-//创建一个新的链表，并将新节点作为链表的头节点
-ListNode *head = new ListNode(val);
-
 ListNode* cur = l1;
     for (int i = 0; i < 5; i++) {
         cur->next = new ListNode(0);
@@ -100,6 +88,7 @@ ListNode* cur = l1;
     }
     cur->next = new ListNode(1);
 //对于这个插入的操作有些不解，不是把l1复制到cur了吗，为什么最后的传参还是l1
+//l1是个指针，指向首个节点，这里是将了l1存储的地址复制给指针cur，这样操作的目的是为了保存l1存储的地址
 ```
 
 ### Code&Analysis
