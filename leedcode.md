@@ -1068,3 +1068,173 @@ public:
 };
 ```
 
+## 12.整数转罗马数字
+
+### Thought
+
+哈希表，将六个罗马数字存入unordered_map，整数不同的情况与表中对比并输出相应字符，最后组成字符串并返回
+
+### Doubts&Gains
+
+>unordered_map是C++ STL提供的关联容器之一，用于实现快速查找键值对。它的初始化可以使用以下几种方式：
+
+1. 默认初始化：可以直接创建一个空的unordered_map，例如：
+
+   ```c
+   std::unordered_map<int, std::string> myMap;
+   ```
+
+2. 初始化列表初始化：可以使用花括号{}来初始化unordered_map，例如：
+
+   ```c
+   std::unordered_map<int, std::string> myMap = {{1, "one"}, {2, "two"}, {3, "three"}};
+   ```
+
+3. 拷贝构造函数初始化：可以使用另一个已有的unordered_map来初始化新的unordered_map，例如：
+
+   ```c
+   std::unordered_map<int, std::string> myMap1 = {{1, "one"}, {2, "two"}, {3, "three"}};
+   std::unordered_map<int, std::string> myMap2(myMap1);
+   ```
+
+4. 范围初始化：可以使用一个迭代器范围内的元素来初始化unordered_map，例如：
+
+   ```c
+   std::vector<std::pair<int, std::string>> vec = {{1, "one"}, {2, "two"}, {3, "three"}};
+   std::unordered_map<int, std::string> myMap(vec.begin(), vec.end());
+   ```
+
+5. emplace函数初始化：可以使用emplace函数向unordered_map中添加元素，例如：
+
+   ```c
+   std::unordered_map<int, std::string> myMap;
+   myMap.emplace(1, "one");
+   myMap.emplace(2, "two");
+   myMap.emplace(3, "three");
+   ```
+
+> `operator[]`函数：如果要查找的键存在于unordered_map中，则返回与该键关联的值，否则会自动创建一个具有默认值的元素并将其插入到unordered_map中。
+
+`operator[]`函数还可以用于修改unordered_map中的元素的值。例如：
+
+```c
+std::unordered_map<std::string, int> myMap = {{"apple", 2}, {"banana", 3}, {"orange", 4}};
+myMap["banana"] = 5;          // 修改键值为"banana"的元素的值为5
+```
+
+> `at()`函数：如果要查找的键存在于unordered_map中，则返回与该键关联的值，否则会抛出一个`std::out_of_range`异常。
+
+`at()`函数还可以用于修改unordered_map中的元素的值。例如：
+
+```c
+std::unordered_map<std::string, int> myMap = {{"apple", 2}, {"banana", 3}, {"orange", 4}};
+myMap.at("banana") = 5;          // 修改键值为"banana"的元素的值为5
+```
+
+### Code&Analysis
+
+执行时间超过25.58%，消耗内存超过21.1%，这是我首次主动使用数据结构改善代码，还行👍👍👍
+
+```C++
+class Solution {
+public:
+    string intToRoman(int num) {
+        map<int, char> hash = {{1,    'I'},
+                               {5,    'V'},
+                               {10,   'X'},
+                               {50,   'L'},
+                               {100,  'C'},
+                               {500,  'D'},
+                               {1000, 'M'}};
+
+        string str = "";
+        while (num > 0) {
+            if (num >= 1000) {
+                char c = hash.at(1000);
+                str = str + c;
+                num -= 1000;
+            } else if (num >= 500) {
+                if (num >= 900) {
+                    char c1,c2;
+                    c1 = hash.at(100);
+                    c2 = hash.at(1000);
+                    str = str + c1 + c2;
+                    num -= 900;
+                } else {
+                    char c;
+                    c = hash.at(500);
+                    str = str + c;
+                    num -= 500;
+                }
+            } else if (num >= 100) {
+                if (num >= 400) {
+                    char c1, c2;
+                    c1 = hash.at(100);
+                    c2 = hash.at(500);
+                    str = str + c1 + c2;
+                    num -= 400;
+                } else {
+                    char c;
+                    c = hash.at(100);
+                    str = str + c;
+                    num -= 100;
+                }
+            } else if (num >= 50) {
+                if (num >= 90) {
+                    char c1, c2;
+                    c1 = hash.at(10);
+                    c2 = hash.at(100);
+                    str = str + c1 + c2;
+                    num -= 90;
+                } else {
+                    char c;
+                    c = hash.at(50);
+                    str = str + c;
+                    num -= 50;
+                }
+            } else if (num >= 10) {
+                if (num >= 40) {
+                    char c1, c2;
+                    c1 = hash.at(10);
+                    c2 = hash.at(50);
+                    str = str + c1 + c2;
+                    num -= 40;
+                } else {
+                    char c;
+                    c = hash.at(10);
+                    str = str + c;
+                    num -= 10;
+                }
+            } else if (num >= 5) {
+                if (num >= 9) {
+                    char c1, c2;
+                    c1 = hash.at(1);
+                    c2 = hash.at(10);
+                    str = str + c1 + c2;
+                    num -= 9;
+                } else {
+                    char c;
+                    c = hash.at(5);
+                    str = str + c;
+                    num -= 5;
+                }
+            } else if (num >= 1) {
+                if (num >= 4) {
+                    char c1, c2;
+                    c1 = hash.at(1);
+                    c2 = hash.at(5);
+                    str = str + c1 + c2;
+                    num -= 4;
+                } else {
+                    char c;
+                    c = hash.at(1);
+                    str = str + c;
+                    num -= 1;
+                }
+            }
+        }
+        return str;
+    }
+};
+```
+
