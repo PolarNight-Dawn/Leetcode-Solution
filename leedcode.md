@@ -1135,99 +1135,77 @@ myMap.at("banana") = 5;          // 修改键值为"banana"的元素的值为5
 
 执行时间超过25.58%，消耗内存超过21.1%，这是我首次主动使用数据结构改善代码，还行👍👍👍
 
+#### modify
+
+这道题直接将阿拉伯数字对应的罗马数字输出就行了，没有必要单独去开辟空间存放罗马数字与阿拉伯数字的映射，改进之后执行时间击败82.58%，消耗内存击败67.95%，大道至简。就是代码行数有点多👀 
+
 ```C++
 class Solution {
 public:
     string intToRoman(int num) {
-        map<int, char> hash = {{1,    'I'},
-                               {5,    'V'},
-                               {10,   'X'},
-                               {50,   'L'},
-                               {100,  'C'},
-                               {500,  'D'},
-                               {1000, 'M'}};
-
         string str = "";
         while (num > 0) {
             if (num >= 1000) {
-                char c = hash.at(1000);
+                char c = 'M';
                 str = str + c;
                 num -= 1000;
             } else if (num >= 500) {
                 if (num >= 900) {
-                    char c1,c2;
-                    c1 = hash.at(100);
-                    c2 = hash.at(1000);
-                    str = str + c1 + c2;
+                    string str1 = "CM";
+                    str = str + str1;
                     num -= 900;
                 } else {
-                    char c;
-                    c = hash.at(500);
+                    char c = 'D';
                     str = str + c;
                     num -= 500;
                 }
             } else if (num >= 100) {
                 if (num >= 400) {
-                    char c1, c2;
-                    c1 = hash.at(100);
-                    c2 = hash.at(500);
-                    str = str + c1 + c2;
+                    string str1 = "CD";
+                    str = str + str1;
                     num -= 400;
                 } else {
-                    char c;
-                    c = hash.at(100);
+                    char c = 'C';
                     str = str + c;
                     num -= 100;
                 }
             } else if (num >= 50) {
                 if (num >= 90) {
-                    char c1, c2;
-                    c1 = hash.at(10);
-                    c2 = hash.at(100);
-                    str = str + c1 + c2;
+                    string str1 = "XC";
+                    str = str + str1;
                     num -= 90;
                 } else {
-                    char c;
-                    c = hash.at(50);
+                    char c = 'L';
                     str = str + c;
                     num -= 50;
                 }
             } else if (num >= 10) {
                 if (num >= 40) {
-                    char c1, c2;
-                    c1 = hash.at(10);
-                    c2 = hash.at(50);
-                    str = str + c1 + c2;
+                    string str1 = "XL";
+                    str = str + str1;
                     num -= 40;
                 } else {
-                    char c;
-                    c = hash.at(10);
+                    char c = 'X';
                     str = str + c;
                     num -= 10;
                 }
             } else if (num >= 5) {
                 if (num >= 9) {
-                    char c1, c2;
-                    c1 = hash.at(1);
-                    c2 = hash.at(10);
-                    str = str + c1 + c2;
+                    string str1 = "IX";
+                    str = str + str1;
                     num -= 9;
                 } else {
-                    char c;
-                    c = hash.at(5);
+                    char c = 'V';
                     str = str + c;
                     num -= 5;
                 }
             } else if (num >= 1) {
                 if (num >= 4) {
-                    char c1, c2;
-                    c1 = hash.at(1);
-                    c2 = hash.at(5);
-                    str = str + c1 + c2;
+                    string str1 = "IV";
+                    str = str + str1;
                     num -= 4;
                 } else {
-                    char c;
-                    c = hash.at(1);
+                    char c = 'I';
                     str = str + c;
                     num -= 1;
                 }
@@ -1237,4 +1215,91 @@ public:
     }
 };
 ```
+
+## 13.罗马数字转整数😋
+
+### Thought
+
+思路与12题相似，运用函数分段的思想，好像这里用哈希表是多余的
+
+### Doubts&Gains
+
+> `len = max(len, (int)strs[i + 1].size());`
+
+>`unordered_set` 和 `unordered_map` 都是 C++ STL 中的关联容器，它们的底层实现都是哈希表。
+
+它们之间的区别在于它们存储的数据类型不同：
+
+- `unordered_set` 存储的是一组不重复的元素，不提供访问和修改元素的方式，因此可以用来快速判断一个元素是否在集合中出现过。
+- `unordered_map` 存储的是一组键值对，每个键唯一对应一个值，提供了访问和修改元素的方式，因此可以用来快速查找某个键对应的值。
+
+另外，`unordered_set` 和 `unordered_map` 在使用上还有一些细节的区别：
+
+1. `unordered_set` 和 `unordered_map` 的声明方式不同。`unordered_set` 的声明方式如下：
+
+   ```
+   unordered_set<int> mySet;
+   ```
+
+   `unordered_map` 的声明方式如下：
+
+   ```
+   unordered_map<int, string> myMap;
+   ```
+
+   注意，`unordered_map` 存储的是一组键值对，因此需要同时指定键类型和值类型。
+
+2. `unordered_set` 和 `unordered_map` 的元素访问方式不同。`unordered_set` 的元素只能被访问，不能被修改。可以使用迭代器来遍历集合中的元素，例如：
+
+   ```
+   for (auto it = mySet.begin(); it != mySet.end(); ++it) {
+       cout << *it << " ";
+   }
+   ```
+
+   `unordered_map` 的元素可以被访问和修改。可以使用键来访问值，例如：
+
+   ```
+   myMap[1] = "one";  // 插入一个键值对
+   cout << myMap[1] << endl;  // 输出值 "one"
+   ```
+
+   上面的代码使用键值对 `[1, "one"]` 插入了一个元素，然后使用键 `1` 来访问该元素的值。
+
+3. `unordered_set` 和 `unordered_map` 的查找方式不同。`unordered_set` 可以使用 `count()` 函数来判断一个元素是否在集合中出现过，例如：
+
+   ```
+   if (mySet.count(10)) {
+       cout << "The element 10 is in the set" << endl;
+   }
+   ```
+
+   `unordered_map` 可以使用 `find()` 函数来查找一个键对应的值，例如：
+
+   ```
+   auto it = myMap.find(1);
+   if (it != myMap.end()) {
+       cout << "The value of key 1 is " << it->second << endl;
+   }
+   ```
+
+   上面的代码使用键 `1` 来查找 `myMap` 中的一个元素，并输出该元素的值。
+
+综上所述，`unordered_set` 和 `unordered_map` 之间的主要区别在于存储的数据类型和元素的访问方式。`unordered_set` 存储的是一组不重复的元素，不能修改元素
+
+### Code&Analysis
+
+执行时间击败94.35%，消耗内存击败67.5%😋
+
+## 14.最长公共前缀
+
+### Thought
+
+
+
+### Doubts&Gains
+
+
+
+### Code&Analysis
 
