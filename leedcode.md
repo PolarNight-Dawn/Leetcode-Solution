@@ -44,25 +44,6 @@ public:
 - 本题map是用来存什么的
 - map中的key和value用来存什么的
 
-```c++
-class Solution {
-public:
-    vector<int> twoSum(vector<int>& nums, int target) {
-        std::unordered_map <int,int> map;
-        for(int i = 0; i < nums.size(); i++) {
-            // 遍历当前元素，并在map中寻找是否有匹配的key
-            auto iter = map.find(target - nums[i]); 
-            if(iter != map.end()) {
-                return {iter->second, i};
-            }
-            // 如果没找到匹配对，就把访问过的元素和下标加入到map中
-            map.insert(pair<int, int>(nums[i], i)); 
-        }
-        return {};
-    }
-};
-```
-
 ## 2.两数相加
 
 ### Thought
@@ -77,7 +58,7 @@ public:
 
 ### Doubts&Gains
 
-> 插入 将新节点插入到已有链表的头部`ListNode* cur = new ListNode(val);cur->next = l3;l3 = cur;`
+> 插入 将新节点插入到已有头部的链表ListNode* cur = new ListNode(val);cur->next = l3;l3 = cur;`
 > 创建一个新的链表，并将新节点作为链表的头节点`ListNode *head = new ListNode(val);`
 
 ```C++
@@ -151,53 +132,6 @@ public:
 #### new
 
 这里将链表翻转的操作时间和空间开销都很大
-
-```c++
-class Solution {
-public:
-    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
-        ListNode* l3 = nullptr;
-        int carry = 0, val = 0;
-
-        while (l1 || l2) {
-            int num1 = l1 ? l1->val : 0;
-            int num2 = l2 ? l2->val : 0;
-
-            int sum = num1 + num2 + carry;
-            val = sum % 10;
-            carry = sum / 10;
-
-            ListNode* cur = new ListNode(val);
-            cur->next = l3;
-            l3 = cur;
-
-            if (l1) l1 = l1->next;
-            if (l2) l2 = l2->next;
-        }
-
-        if (carry != 0) {
-            ListNode* cur = new ListNode(carry);
-            cur->next = l3;
-            l3 = cur;
-        }
-
-        if (l3 == nullptr) {
-            ListNode* cur = new ListNode(0);
-        }
-        
-        //链表翻转
-        ListNode* prev = nullptr;
-        ListNode* curr = l3;
-        while (curr != nullptr) {
-            ListNode* next = curr->next;
-            curr->next = prev;
-            prev = curr;
-            curr = next;
-        }
-        return prev;
-    }
-};
-```
 
 ## 3.无重复字符的最长子串
 
@@ -1291,6 +1225,68 @@ public:
 
 执行时间击败94.35%，消耗内存击败67.5%😋
 
+```c++
+class Solution {
+public:
+    int romanToInt(string s) {
+        /*unordered_map<char, int> hash_map = {{'I', 1},
+                                             {'V', 5},
+                                             {'X', 10},
+                                             {'L', 50},
+                                             {'C', 100},
+                                             {'D', 500},
+                                             {'M', 1000}};
+*/
+        int len = s.size();
+        int sum = 0;
+        for (int i = 0; i < len; i++) {
+            if (s[i] == 'I') {
+                if (s[i + 1] == 'V') {
+                    sum += 4;
+                    i = i + 1;
+                } else if (s[i + 1] == 'X') {
+                    sum += 9;
+                    i = i + 1;
+                } else {
+                    sum += 1;
+                }
+            } else if (s[i] == 'V') {
+                sum += 5;
+            } else if (s[i] == 'X') {
+                if (s[i + 1] == 'L') {
+                    sum += 40;
+                    i = i + 1;
+                } else if (s[i + 1] == 'C') {
+                    sum += 90;
+                    i = i + 1;
+                } else {
+                    sum += 10;
+                }
+            } else if (s[i] == 'L') {
+                sum += 50;
+            } else if (s[i] == 'C') {
+                if (s[i + 1] == 'D') {
+                    sum += 400;
+                    i = i + 1;
+                } else if (s[i + 1] == 'M') {
+                    sum += 900;
+                    i = i + 1;
+                } else {
+                    sum += 100;
+                }
+            } else if (s[i] == 'D') {
+                sum += 500;
+            } else if (s[i] == 'M') {
+                sum += 1000;
+            }
+        }
+        return sum;
+    }
+};
+```
+
+
+
 ## 14.最长公共前缀😥
 
 ### Thought
@@ -1316,3 +1312,157 @@ public:
 
 
 ### Code&Analysis
+
+
+
+## 16.最接近的三数之和❤️
+
+### Thought
+
+将数组排序，使用双指针指向边界上的两个元素，根据三数之和与target的值的关系，选择「抛弃」左边界的元素还是右边界的元素，更新差值的值，返回最小差值的三数
+
+### Doubts&Gains
+
+> `INT_MAX` 使用 INT_MAX 需要包含 <climits> 头文件。该头文件定义了整数类型的最大值和最小值，以及其他一些常量和宏定义。其中 INT_MAX 是一个宏定义，表示 int 类型的最大值。
+
+### Code&Analysis
+
+执行时间击败93.68%，消耗内存击败37.4%❤️
+
+```c++
+class Solution {
+public:
+    int threeSumClosest(vector<int>& nums, int target) {
+        sort(nums.begin(), nums.end()); // 排序
+        int n = nums.size();
+        int diff = INT_MAX; // 初始差值为无穷大
+        int result = 0; // 记录结果
+        for (int i = 0; i < n - 2; i++) {
+            int left = i + 1;
+            int right = n - 1;
+            while (left < right) {
+                int threeSum = nums[i] + nums[left] + nums[right];
+                int curDiff = abs(threeSum - target); // 计算当前差值
+                if (curDiff < diff) {
+                    diff = curDiff;
+                    result = threeSum;
+                }
+                if (threeSum < target) {
+                    left++;
+                } else if (threeSum > target) {
+                    right--;
+                } else {
+                    return result;
+                }
+            }
+        }
+        return result;
+    }
+};
+```
+
+## 17.电话号码的字母组合😩
+
+### Thought
+
+回溯
+
+### Doubts&Gains
+
+>`vector<pair<int, vector<char>>>`，它是一个向量，其中每个元素都是一个 `pair`，其中第一个元素是 `int` 类型，第二个元素是 `vector<char>` 类型。
+
+而 `vector<vector<char>>` 是一个二维向量，其中每个元素都是一个向量，每个子向量都包含一组 `char` 类型的元素。
+
+因此，两者之间的主要区别在于它们的元素类型和向量的结构不同。`vector<pair<int, vector<char>>>` 包含一组具有整数和字符向量的键值对，而 `vector<vector<char>>` 包含一组具有字符向量的向量。
+
+### Code&Analysis
+
+超时😩
+
+```C++
+class Solution {
+public:
+    vector<string> letterCombinations(string digits) {
+        vector<pair<int, vector<char>>> buffer = { {2, {'a', 'b', 'c'}},
+                                                   {3, {'d', 'e', 'f'}},
+                                                   {4, {'g', 'h', 'i'}},
+                                                   {5, {'j', 'k', 'l'}},
+                                                   {6, {'m', 'n', 'o'}},
+                                                   {7, {'p', 'q', 'r', 's'}},
+                                                   {8, {'t', 'u', 'v'}},
+                                                   {9, {'w', 'x', 'y', 'z'}}
+        };
+
+        int len = digits.length();
+        int cnt = 0;
+        vector<string> res;
+        while (cnt <= len) {
+            int num = digits[cnt++] - '0';
+            if (cnt == 1) {
+                for (int i = 0; i < buffer[num - 2].second.size(); i++) {
+                    string str = "";
+                    str += buffer[num - 2].second[i];
+                    res.push_back(str);
+                }
+            } else {
+                for (int i = 0; i < res.size(); i++) {
+                    for (int j = 0; j < buffer[num - 2].second.size(); j++) {
+                        string str = "";
+                        str += res[i] +  buffer[num - 2].second[j];
+                        res.push_back(str);
+                    }
+                }
+            }
+
+            for (int i = 0; i < res.size(); i++) {
+                if (sizeof(res[i]) != cnt) {
+                    res.erase(res.begin() + i);
+                }
+            }
+        }
+        return res;
+    }
+};
+```
+
+<回溯>
+
+执行时间击败34.1%，消耗内存击败70.35%
+
+## 18.四数之和
+
+### Thought
+
+这道题与三数之和有异曲同工之妙，只需将其中两数之和看做第三数，即可套用三数之和的思路
+
+### Doubts&Gains
+
+> `res.push_back({nums[i], nums[j], nums[left], nums[right]});`
+
+### Code&Analysis
+
+执行时间击败5.2%，消耗内存击败6.97%
+
+## 19.删除链表的倒数第 N 个结点
+
+### Thought
+
+这道题比较简单，先循环一次拿到链表的总长度，然后循环到要删除的结点的前一个结点开始删除操作.需要注意的特例是头结点的处理
+
+### Doubts&Gains
+
+对于链表的处理还是显得有些生涩，需要反复练习
+
+>`ListNode *cur = head;
+>int i = len - n;
+>while (i > 1) {
+>    cur = cur->next;
+>    i--;
+>}
+>cur->next = cur->next->next;`
+>
+>对于cur的创建还是只是知其然，不知其所以然
+
+### Code&Analysis
+
+执行时间击败27.49%，消耗内存击败43.55%
