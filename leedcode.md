@@ -336,7 +336,7 @@ public:
 };
 ```
 
-## 5.最长回文子串😭
+## 5.最长回文子串(DP)😭
 
 ### Thought
 
@@ -1361,7 +1361,7 @@ public:
 };
 ```
 
-## 17.电话号码的字母组合😩
+## 17.电话号码的字母组合(回溯)😩
 
 ### Thought
 
@@ -1466,3 +1466,106 @@ public:
 ### Code&Analysis
 
 执行时间击败27.49%，消耗内存击败43.55%
+
+## 20.有效的括号(stack)😭
+
+### Thought
+
+由于栈结构的特殊性，非常适合做对称匹配类的题目。
+
+### Doubts&Gains
+
+
+
+### Code&Analysis
+
+
+
+```c++
+class Solution {
+public:
+    bool isValid(string s) {
+        vector<int> vecSLeft, vecSRight, vecMLeft, vecMRight, vecLLeft, vecLRight;
+        int len = s.length();
+
+        for (int i = 0; i < len; i++) {
+            if (s[i] == '{') {
+                if (vecSLeft.empty() != 0 && vecMLeft.empty() != 0) {
+                    return false;
+                }
+                vecLLeft.push_back(i);
+            } else if (s[i] == '[') {
+                if (vecSLeft.empty() != 0) {
+                    return false;
+                }
+                if (vecLLeft.empty() != 0 && vecLLeft.back() < i) {
+                    vecMLeft.push_back(i);
+                }
+                if (vecLLeft.empty() == 0) {
+                    vecMLeft.push_back(i);
+                }
+                return false;
+            } else if (s[i] == '(') {
+                if (vecMLeft.empty() != 0 && vecMLeft.back() < i) {
+                    vecSLeft.push_back(i);
+                }
+                if (vecMLeft.empty() == 0 && vecLLeft.empty() != 0 && vecLLeft.back() < i) {
+                    vecSLeft.push_back(i);
+                }
+                if (vecMLeft.empty() == 0 && vecLLeft.empty() == 0) {
+                    vecSLeft.push_back(i);
+                }
+                return false;
+            } else if (s[i] == ')') {
+                if (vecLRight.empty() != 0 && vecMRight.empty() != 0 && vecSLeft.empty() != 0) {
+                    return false;
+                }
+                if (vecSLeft.back() < i) {
+                    vecSRight.push_back(i);
+                }
+                return false;
+            } else if (s[i] == ']') {
+                if (vecLRight.empty() != 0 && vecMLeft.empty() != 0)  {
+                    return false;
+                }
+                if (vecSRight.empty() != 0 && vecSRight.back() < i) {
+                    vecMRight.push_back(i);
+                }
+                if (vecSRight.empty() == 0) {
+                    vecMRight.push_back(i);
+                }
+                return false;
+            } else if (s[i] == '}') {
+                if (vecLLeft.empty() != 0)  {
+                    return false;
+                }
+                if (vecMLeft.empty() != 0 && vecMRight.back() < i) {
+                    vecLRight.push_back(i);
+                }
+                if (vecMLeft.empty() == 0 && vecSLeft.empty() != 0 && vecSRight.back() < i) {
+                    vecLRight.push_back(i);
+                }
+                if (vecMLeft.empty() == 0 && vecSLeft.empty() == 0) {
+                    vecLRight.push_back(i);
+                }
+                return false;
+            }
+        }
+        return true;
+    }
+};
+```
+
+## 21.合并两个有序链表
+
+### Thought
+
+将两个链表中的元素取出并放入事先准备的容器中，排序后插入新的链表中，返回新链表
+
+### Doubts&Gains
+
+> 链表的插入
+
+### Code&Analysis
+
+执行时间击败20.2%，消耗内存击败5.5%
