@@ -1569,3 +1569,94 @@ public:
 ### Code&Analysis
 
 执行时间击败20.2%，消耗内存击败5.5%
+
+## 22.括号生成😩
+
+### Thought
+
+回溯
+
+### Doubts&Gains
+
+
+
+### Code&Analysis
+
+递归调用 `backTracking` 函数可能导致栈溢出的问题。
+
+当递归调用次数过多时，函数的局部变量和调用栈的信息会占用大量的栈空间，超过了系统所分配给程序的栈空间大小，从而导致栈溢出错误。
+
+```c++
+class Solution {
+public:
+    unordered_map<int, char> map = {{0, '{'},
+                                    {1, '}'}};
+    vector<string> res;
+
+    string str = "{";
+
+    void backTracking(string str, int left, int right, int index, int n) {
+        int balance = left - right;
+        if (index == 2 * n && balance == 0) {
+            res.push_back(str);
+            return;
+        }
+
+        if (balance < 0) {
+            return;
+        }
+
+        for (int i = 0; i < 2; i++) {
+            str.push_back(map[i]);
+            if (i == 0) {
+                left++;
+                backTracking(str, left, right, index + 1, n);
+                left--;
+            }
+            if (i == 1) {
+                right++;
+                backTracking(str, left, right, index + 1, n);
+                right--;
+            }
+            str.pop_back();
+        }
+    }
+
+    vector<string> generateParenthesis(int n) {
+        str.clear();
+        res.clear();
+        backTracking(str, 0, 0, 1, n);
+        return res;
+    }
+};
+```
+
+## 23.合并K个升序链表❤️
+
+### Thought
+
+20题的变种，将链表数组中每个链表的元素取出并放入容器，排序，插入升序链表
+
+### Doubts&Gains
+
+
+
+### Code&Analysis❤️
+
+执行时间击败81.36%，消耗内存击败18.72%
+
+## 24.两两交换链表中的节点
+
+### Thought
+
+
+
+### Doubts&Gains
+
+
+
+### Code&Analysis
+
+执行时间击败81.36%，消耗内存击败18.72%
+
+## 
