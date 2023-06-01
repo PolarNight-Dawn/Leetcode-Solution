@@ -302,27 +302,7 @@ public:
 
 #### modify
 
-```C++
-class Solution {
-public:
-    int lengthOfLongestSubstring(string s) {
-        unordered_map<char, int> hash;
-        int ans = 0;
-        int left = 0, right = 0;
-        int n = s.size();
-        while (right < n) {
-            char c = s[right];
-            if (hash.find(c) != hash.end() && hash[c] >= left) {
-                left = hash[c] + 1;
-            }
-            hash[c] = right;
-            ans = max(ans, right - left + 1);
-            right++;
-        }
-        return ans;
-    }
-};
-```
+执行时间击败79.97%，消耗内存击败60.31%
 
 ## 4.两个正序数组的中位数
 
@@ -334,7 +314,13 @@ public:
 
 >`if (nums1[i] == '\0')`使用了'\0'作为判断条件，这是错误的，因为'\0'表示的是字符串的结束符，在vector中是没有意义的。
 
+>`时间复杂度`指的是***随着输入大小的增长，运行时间会以怎样的速度扩张。***
+>
+>`O(log(N))`指的是***该算法随着输入规模翻倍，操作次数只增加一。每操作一次，需要处理的规模就小一半的。***
+
 ### Code&Analysis
+
+时间复杂度为O(n+m)
 
 ```C++
 class Solution {
@@ -377,15 +363,23 @@ public:
 };
 ```
 
+#### modify
+
+这个题要求时间复杂度为O(log(n+m))，也就意味着需要采用二分法
+
+执行时间击败63.36%，消耗内存击败67.34%
+
 ## 5.最长回文子串(DP)😭
 
 ### Thought
 
-使用动态规划（Dynamic Programming）的思想，来减少运行时间。
+dp五部曲：
 
-具体来说，我们可以使用一个二维数组$dp$，其中 $dp[i][j]$ 表示字符串 $s$ 中从 $i$ 到 $j$ 的子串是否为回文串。对于任意一个子串 $s[i, j]$，如果该子串是回文串，那么它的左右两端分别减少一个字符仍然是回文串，即 $dp[i + 1][j - 1]$ 为真，且 $s[i] = s[j]$。
-
-根据这个思路，我们可以使用一个变量 $maxLen$ 来记录当前找到的最长回文子串的长度，以及最长回文子串的起始位置 $start$。在更新 $dp$ 数组时，如果当前子串是回文串并且长度大于 $maxLen$，那么就更新 $maxLen$ 和 $start$。
+1. 确定dp数组（dp table）以及下标的含义
+2. 确定递推公式
+3. dp数组如何初始化
+4. 确定遍历顺序
+5. 举例推导dp数组
 
 ### Doubts&Gains
 
@@ -401,41 +395,11 @@ public:
 
 ### Code&Analysis
 
-```C++
-class Solution {
-public:
-    string longestPalindrome(string s) {
-        int n = s.length();
-        if (n < 2) {
-            return s;
-        }
+执行时间击败10.2%，消耗内存击败54.89%
 
-        int start = 0, maxLen = 1;
-        vector<vector<bool>> dp(n, vector<bool>(n, false));
+#### advanced stage
 
-        for (int i = n-1; i >= 0; i--) {
-            for (int j = i; j < n; j++) {
-                if (s[i] == s[j]) {
-                    if (j - i < 2) {
-                        dp[i][j] = true;
-                    } else {
-                        dp[i][j] = dp[i+1][j-1];
-                    }
-                } else {
-                    dp[i][j] = false;
-                }
 
-                if (dp[i][j] && j - i + 1 > maxLen) {
-                    start = i;
-                    maxLen = j - i + 1;
-                }
-            }
-        }
-
-        return s.substr(start, maxLen);
-    }
-};
-```
 
 ## 6.N字形变换
 
