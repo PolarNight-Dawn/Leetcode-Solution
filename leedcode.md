@@ -732,7 +732,7 @@ public:
 - 从左到右扫描
 - 从右到左扫描
 
-### Doubts&Gains
+### :zero:Doubts&Gains
 
 > `从左到右扫描`还未理解
 
@@ -1312,7 +1312,7 @@ public:
 
 对于字符串数组来说最长公共前缀必然由数组中最短的字符串决定，所以找到最短字符串的位置和长度，由最短字符串的第一个字符开始与其他字符串一一对比，直到找出不同返回结果
 
-### Doubts&Gains
+### :zero:Doubts&Gains
 
 
 
@@ -1354,15 +1354,61 @@ public:
 
 ### Thought
 
+#### old：
 
+哈希表 现将数据存入map中，在遍历数组的时候，只需要向map去查询是否有和目前遍历元素twoSum匹配的数值，如果有，就找到匹配对存入temp，进行去重；如果没有就继续循环，这里的去重是根据find函数判断res中是否存在temp，没有就将temp传入res，有继续循环
 
-### Doubts&Gains
+#### new：
 
+双指针，双指针的难点在于该怎么移动左右指针，一般来说应先将要处理的数据排序，再根据所求结果进行判断，小于0就left右移，大于0就right左移，本题的难点在于去重的处理，由于已对数据排序，重复数据必然相邻，对相邻数据进行判断，重复跳过即可
 
+### :zero:Doubts&Gains
+
+>`sort`的排序的具体原理:为什么对二维vector数组的排序不起效
+
+>`二维vector数组`的排序操作
+
+>`find`函数的使用
 
 ### Code&Analysis
 
+#### old
 
+算法超时了
+
+```C++
+class Solution {
+public:
+    vector<vector<int>> threeSum(vector<int> &nums) {
+        unordered_map<int, int> map;
+        vector<vector<int>> res;
+
+        for (int i = 0; i < nums.size(); i++) {
+            map.insert(pair<int, int>(0 - nums[i], i));
+        }
+
+        int twoSum = 0;
+        for (int i = 0; i < nums.size(); i++) {
+            for (int j = i + 1; j < nums.size(); j++) {
+                twoSum = nums[i] + nums[j];
+                auto iter = map.find(twoSum);
+                if (iter != map.end() && iter->second != i && iter->second != j) {
+                    vector<int> triplet = {nums[i], nums[j], nums[iter->second]};
+                    sort(triplet.begin(), triplet.end());
+                    if (find(res.begin(), res.end(), triplet) == res.end()) {
+                        res.push_back(triplet);
+                    }
+                }
+            }
+        
+        return res;
+    }
+};
+```
+
+#### new😋
+
+执行时间击败93.40%，消耗内存击败66.2%😋😋😋
 
 ## 16.最接近的三数之和❤️
 
@@ -1373,6 +1419,14 @@ public:
 ### Doubts&Gains
 
 > `INT_MAX` 使用 INT_MAX 需要包含 <climits> 头文件。该头文件定义了整数类型的最大值和最小值，以及其他一些常量和宏定义。其中 INT_MAX 是一个宏定义，表示 int 类型的最大值。
+
+>`interrupted by signal 15: SIGTERM`是一种在类Unix系统中常见的信号。它代表了一个终止请求，通常用于请求进程正常终止。
+>
+>>当进程接收到 SIGTERM 信号时，它意味着某个外部实体（通常是操作系统或其他进程）发出了一个请求，要求该进程终止执行并进行清理工作。接收到 SIGTERM 信号后，进程可以选择如何处理该信号，通常的处理方式是优雅地关闭进程并进行资源释放。
+>>
+>>SIGTERM 是一种默认的终止信号，可以通过命令行工具（如kill命令）或编程语言中的相关函数（如C语言中的kill函数）来发送给进程。在大多数情况下，这是一种正常的终止请求，允许进程有机会进行清理和释放资源，然后正常退出。
+>>
+>>需要注意的是，SIGTERM 是一种软件终止信号，与SIGKILL（信号 9）不同。SIGKILL 是一种强制终止信号，会立即终止进程的执行，不给予进程进行清理的机会。SIGTERM 通常被用于优雅地终止进程，而SIGKILL 则被用于强制终止无响应或无法正常终止的进程。
 
 ### Code&Analysis
 
