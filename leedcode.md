@@ -1720,7 +1720,13 @@ public:
 
 ### Thought
 
+#### old
+
 这道题比较简单，先循环一次拿到链表的总长度，然后循环到要删除的结点的前一个结点开始删除操作.需要注意的特例是头结点的处理
+
+#### new
+
+双指针法
 
 ### Doubts&Gains
 
@@ -1738,7 +1744,46 @@ public:
 
 ### Code&Analysis
 
+#### old
+
 执行时间击败27.49%，消耗内存击败43.55%
+
+```C++
+class Solution {
+public:
+    ListNode *removeNthFromEnd(ListNode *head, int n) {
+        ListNode* cur = head;
+        int len = 0;
+
+        while (cur != nullptr) {
+            len++;
+            cur = cur->next;
+        }
+
+        if (n > len) {
+            return head;
+        } else if (n == len) {
+            ListNode* curr = head;
+            head = head->next;
+            curr->next = nullptr;
+            return head;
+        } else {
+            ListNode* curr = head;
+            int i = len - n;
+            while (i > 1) {
+                curr = curr->next;
+                i--;
+            }
+            curr->next = curr->next->next;
+        }
+        return head;
+    }
+};
+```
+
+#### new😋
+
+执行时间击败77.40%，消耗内存击败96.45%😋😋😋
 
 ## 20.😭有效的括号(stack)
 
