@@ -1650,9 +1650,17 @@ public:
 
 ## 18.四数之和
 
-### Thought
+### :zero:Thought
 
 这道题与三数之和有异曲同工之妙，只需将其中两数之和看做第三数，即可套用三数之和的思路
+
+根据去重方法的不同，运行效率也不同
+
+- 创建一个容器，先将运行结果放入其中，再把容器中的内容与返回结果比较
+
+- 将返回结果现在的项与上一项比较
+
+  注：如果是将现在的项与下一项比较，会漏掉`don't know why`
 
 ### Doubts&Gains
 
@@ -1660,7 +1668,53 @@ public:
 
 ### Code&Analysis
 
+#### old
+
 执行时间击败5.2%，消耗内存击败6.97%
+
+```C++
+class Solution {
+public:
+    vector<vector<int>> fourSum(vector<int> &nums, int target) {
+        int len = nums.size();
+        sort(nums.begin(), nums.end());
+        vector<vector<int>> res;
+        int cnt = 0;
+        unordered_set<string> visited;
+
+        for (int i = 0; i < len; i++) {
+            for (int j = i + 1; j < len; j++) {
+                int left = j + 1;
+                int right = len - 1;
+                while (left < right) {
+                    long int twoSum = nums[i] + nums[j];
+                    long int fourSum = twoSum + nums[left] + nums[right];
+                    if (fourSum < target) {
+                        left++;
+                    } else if (fourSum > target) {
+                        right--;
+                    } else {
+                        string key = to_string(nums[i]) + "," + to_string(nums[j]) + "," + to_string(nums[left]) + "," +
+                                     to_string(nums[right]);
+                        if (visited.find(key) == visited.end()) {
+                            res.push_back({nums[i], nums[j], nums[left], nums[right]});
+                            visited.insert(key);
+                        }
+                        left++;
+                        right--;
+                    }
+                }
+            }
+        }
+
+        return res;
+    }
+};
+```
+
+#### new😋
+
+执行时间击败91.46%，消耗内存击败61.95%😋😋😋
 
 ## 19.删除链表的倒数第 N 个结点
 
