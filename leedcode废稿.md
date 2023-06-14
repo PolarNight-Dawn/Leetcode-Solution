@@ -1,4 +1,4 @@
-# Leedcode废稿
+# LeedCode废稿
 
 ## 3.无重复字符的最长子串
 
