@@ -1749,36 +1749,7 @@ public:
 执行时间击败27.49%，消耗内存击败43.55%
 
 ```C++
-class Solution {
-public:
-    ListNode *removeNthFromEnd(ListNode *head, int n) {
-        ListNode* cur = head;
-        int len = 0;
-
-        while (cur != nullptr) {
-            len++;
-            cur = cur->next;
-        }
-
-        if (n > len) {
-            return head;
-        } else if (n == len) {
-            ListNode* curr = head;
-            head = head->next;
-            curr->next = nullptr;
-            return head;
-        } else {
-            ListNode* curr = head;
-            int i = len - n;
-            while (i > 1) {
-                curr = curr->next;
-                i--;
-            }
-            curr->next = curr->next->next;
-        }
-        return head;
-    }
-};
+	xxxxxxxxxx class Solution {public:    ListNode *removeNthFromEnd(ListNode *head, int n) {        ListNode* cur = head;        int len = 0;        while (cur != nullptr) {            len++;            cur = cur->next;        }        if (n > len) {            return head;        } else if (n == len) {            ListNode* curr = head;            head = head->next;            curr->next = nullptr;            return head;        } else {            ListNode* curr = head;            int i = len - n;            while (i > 1) {                curr = curr->next;                i--;            }            curr->next = curr->next->next;        }        return head;    }C++
 ```
 
 #### new😋
@@ -1797,82 +1768,37 @@ public:
 
 ### Code&Analysis
 
-
+执行时间击败37%，消耗内存击败31.68%
 
 ```c++
 class Solution {
 public:
     bool isValid(string s) {
-        vector<int> vecSLeft, vecSRight, vecMLeft, vecMRight, vecLLeft, vecLRight;
-        int len = s.length();
+      unordered_map<char, char> map = {{'{', '}'},
+                                       {'(', ')'},
+                                       {'[', ']'}};
+      stack<char> sta;
 
-        for (int i = 0; i < len; i++) {
-            if (s[i] == '{') {
-                if (vecSLeft.empty() != 0 && vecMLeft.empty() != 0) {
-                    return false;
-                }
-                vecLLeft.push_back(i);
-            } else if (s[i] == '[') {
-                if (vecSLeft.empty() != 0) {
-                    return false;
-                }
-                if (vecLLeft.empty() != 0 && vecLLeft.back() < i) {
-                    vecMLeft.push_back(i);
-                }
-                if (vecLLeft.empty() == 0) {
-                    vecMLeft.push_back(i);
-                }
-                return false;
-            } else if (s[i] == '(') {
-                if (vecMLeft.empty() != 0 && vecMLeft.back() < i) {
-                    vecSLeft.push_back(i);
-                }
-                if (vecMLeft.empty() == 0 && vecLLeft.empty() != 0 && vecLLeft.back() < i) {
-                    vecSLeft.push_back(i);
-                }
-                if (vecMLeft.empty() == 0 && vecLLeft.empty() == 0) {
-                    vecSLeft.push_back(i);
-                }
-                return false;
-            } else if (s[i] == ')') {
-                if (vecLRight.empty() != 0 && vecMRight.empty() != 0 && vecSLeft.empty() != 0) {
-                    return false;
-                }
-                if (vecSLeft.back() < i) {
-                    vecSRight.push_back(i);
-                }
-                return false;
-            } else if (s[i] == ']') {
-                if (vecLRight.empty() != 0 && vecMLeft.empty() != 0)  {
-                    return false;
-                }
-                if (vecSRight.empty() != 0 && vecSRight.back() < i) {
-                    vecMRight.push_back(i);
-                }
-                if (vecSRight.empty() == 0) {
-                    vecMRight.push_back(i);
-                }
-                return false;
-            } else if (s[i] == '}') {
-                if (vecLLeft.empty() != 0)  {
-                    return false;
-                }
-                if (vecMLeft.empty() != 0 && vecMRight.back() < i) {
-                    vecLRight.push_back(i);
-                }
-                if (vecMLeft.empty() == 0 && vecSLeft.empty() != 0 && vecSRight.back() < i) {
-                    vecLRight.push_back(i);
-                }
-                if (vecMLeft.empty() == 0 && vecSLeft.empty() == 0) {
-                    vecLRight.push_back(i);
-                }
-                return false;
-            }
-        }
-        return true;
+      for (auto & c : s) {
+          if (map.count(c)) {
+              sta.push(c);
+          } else {
+              if (sta.empty() || map[sta.top()] != c) {
+                  return false;
+              }
+              sta.pop();
+          }
+      }
+      return sta.empty();
     }
 };
 ```
+
+#### modify💞
+
+执行时间击败100%，消耗内存击败84.45%💞💞💞
+
+减少了套娃
 
 ## 21.合并两个有序链表
 

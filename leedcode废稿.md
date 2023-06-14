@@ -132,6 +132,83 @@ public:
 };
 ```
 
+## 20.有效的括号
+
+```C++
+class Solution {
+public:
+    bool isValid(string s) {
+        vector<int> vecSLeft, vecSRight, vecMLeft, vecMRight, vecLLeft, vecLRight;
+        int len = s.length();
+
+        for (int i = 0; i < len; i++) {
+            if (s[i] == '{') {
+                if (vecSLeft.empty() != 0 && vecMLeft.empty() != 0) {
+                    return false;
+                }
+                vecLLeft.push_back(i);
+            } else if (s[i] == '[') {
+                if (vecSLeft.empty() != 0) {
+                    return false;
+                }
+                if (vecLLeft.empty() != 0 && vecLLeft.back() < i) {
+                    vecMLeft.push_back(i);
+                }
+                if (vecLLeft.empty() == 0) {
+                    vecMLeft.push_back(i);
+                }
+                return false;
+            } else if (s[i] == '(') {
+                if (vecMLeft.empty() != 0 && vecMLeft.back() < i) {
+                    vecSLeft.push_back(i);
+                }
+                if (vecMLeft.empty() == 0 && vecLLeft.empty() != 0 && vecLLeft.back() < i) {
+                    vecSLeft.push_back(i);
+                }
+                if (vecMLeft.empty() == 0 && vecLLeft.empty() == 0) {
+                    vecSLeft.push_back(i);
+                }
+                return false;
+            } else if (s[i] == ')') {
+                if (vecLRight.empty() != 0 && vecMRight.empty() != 0 && vecSLeft.empty() != 0) {
+                    return false;
+                }
+                if (vecSLeft.back() < i) {
+                    vecSRight.push_back(i);
+                }
+                return false;
+            } else if (s[i] == ']') {
+                if (vecLRight.empty() != 0 && vecMLeft.empty() != 0)  {
+                    return false;
+                }
+                if (vecSRight.empty() != 0 && vecSRight.back() < i) {
+                    vecMRight.push_back(i);
+                }
+                if (vecSRight.empty() == 0) {
+                    vecMRight.push_back(i);
+                }
+                return false;
+            } else if (s[i] == '}') {
+                if (vecLLeft.empty() != 0)  {
+                    return false;
+                }
+                if (vecMLeft.empty() != 0 && vecMRight.back() < i) {
+                    vecLRight.push_back(i);
+                }
+                if (vecMLeft.empty() == 0 && vecSLeft.empty() != 0 && vecSRight.back() < i) {
+                    vecLRight.push_back(i);
+                }
+                if (vecMLeft.empty() == 0 && vecSLeft.empty() == 0) {
+                    vecLRight.push_back(i);
+                }
+                return false;
+            }
+        }
+        return true;
+    }
+};
+```
+
 ## 24.两两交换链表中的节点
 
 ```C++
