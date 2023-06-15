@@ -1804,15 +1804,80 @@ public:
 
 ### Thought
 
+#### old
+
 将两个链表中的元素取出并放入事先准备的容器中，排序后插入新的链表中，返回新链表
+
+#### new
+
+递归或迭代
 
 ### Doubts&Gains
 
-> 链表的插入
+> 链表：`元素插入`
+>
+> > ```C++
+> > ListNode *res = nullptr;
+> > ListNode *temp = nullptr;
+> > 
+> > for (auto &val : vec) {
+> >     if (res == nullptr) {
+> >         res = new ListNode(0);
+> >         temp = res;
+> >     } else {
+> >         temp->next = new ListNode(val);
+> >         temp = temp->next;
+> >     }
+> > }
+> > ```
 
 ### Code&Analysis
 
+#### old
+
 执行时间击败20.2%，消耗内存击败5.5%
+
+```C++
+class Solution {
+public:
+    ListNode *mergeTwoLists(ListNode *list1, ListNode *list2) {
+        vector<int> vec;
+        ListNode *a = list1;
+        ListNode *b = list2;
+
+        while (a != nullptr) {
+            vec.push_back(a->val);
+            a = a->next;
+        }
+
+        while (b != nullptr) {
+            vec.push_back(b->val);
+            b = b->next;
+        }
+
+        sort(vec.begin(), vec.end());
+
+        ListNode *res = nullptr;
+        ListNode* c = nullptr;
+
+        for (int n : vec) {
+            if (res == nullptr) {
+                res = new ListNode(n);
+                c = res;
+            } else {
+                c->next = new ListNode(n);
+                c = c->next;
+            }
+        }
+
+        return res;
+    }
+};
+```
+
+#### new💕
+
+执行时间击败100%，消耗内存击败45.46%💕💕💕
 
 ## 22.😩括号生成
 
