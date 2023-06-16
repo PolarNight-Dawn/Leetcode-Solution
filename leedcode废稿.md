@@ -1,5 +1,7 @@
 # LeedCode废稿
 
+**废稿的作用在于找到代码未能实现的原因，重点理解，可以修改的就修改**
+
 ## 3.无重复字符的最长子串
 
 ### old
@@ -209,6 +211,52 @@ public:
 };
 ```
 
+#### 22
+
+```C++
+class Solution {
+public:
+    vector<char> temp = {'{', '}'};
+    vector<string> res;
+
+    string str = "";
+
+    void backTracking(string str, int left, int right, int index) {
+        int balance = left - right;
+        if (index == 0 && balance == 0) {
+            res.push_back(str);
+            return;
+        }
+
+        if (balance < 0) {
+            return;
+        }
+
+        for (auto &vec : temp) {
+            str.push_back(vec);
+            if (vec == '{') {
+                left++;
+                backTracking(str, left, right, index - 1);
+                left--;
+            }
+            if (vec == '}') {
+                right++;
+                backTracking(str, left, right, index - 1);
+                right--;
+            }
+            str.pop_back();
+        }
+    }
+
+    vector<string> generateParenthesis(int n) {
+        str.clear();
+        res.clear();
+        backTracking(str, 0, 0, 2 * n);
+        return res;
+    }
+};
+```
+
 ## 24.两两交换链表中的节点
 
 ```C++
@@ -256,4 +304,6 @@ public:
     }
 };
 ```
+
+
 
