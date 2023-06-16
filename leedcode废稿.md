@@ -211,19 +211,26 @@ public:
 };
 ```
 
-#### 22
+## 22.括号生成
 
-```C++
+递归调用 `backTracking` 函数可能导致栈溢出的问题。
+
+当递归调用次数过多时，函数的局部变量和调用栈的信息会占用大量的栈空间，超过了系统所分配给程序的栈空间大小，从而导致栈溢出错误。
+
+这是由于错误的限定条件，会总是选择走`'{'`导致一直调用 `backTracking` 函数
+
+```c++
 class Solution {
 public:
-    vector<char> temp = {'{', '}'};
+    unordered_map<int, char> map = {{0, '{'},
+                                    {1, '}'}};
     vector<string> res;
 
-    string str = "";
+    string str = "{";
 
-    void backTracking(string str, int left, int right, int index) {
+    void backTracking(string str, int left, int right, int index, int n) {
         int balance = left - right;
-        if (index == 0 && balance == 0) {
+        if (index == 2 * n && balance == 0) {
             res.push_back(str);
             return;
         }
@@ -232,16 +239,16 @@ public:
             return;
         }
 
-        for (auto &vec : temp) {
-            str.push_back(vec);
-            if (vec == '{') {
+        for (int i = 0; i < 2; i++) {
+            str.push_back(map[i]);
+            if (i == 0) {
                 left++;
-                backTracking(str, left, right, index - 1);
+                backTracking(str, left, right, index + 1, n);
                 left--;
             }
-            if (vec == '}') {
+            if (i == 1) {
                 right++;
-                backTracking(str, left, right, index - 1);
+                backTracking(str, left, right, index + 1, n);
                 right--;
             }
             str.pop_back();
@@ -251,7 +258,7 @@ public:
     vector<string> generateParenthesis(int n) {
         str.clear();
         res.clear();
-        backTracking(str, 0, 0, 2 * n);
+        backTracking(str, 0, 0, 1, n);
         return res;
     }
 };

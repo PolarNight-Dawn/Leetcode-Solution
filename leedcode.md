@@ -1749,7 +1749,35 @@ public:
 执行时间击败27.49%，消耗内存击败43.55%
 
 ```C++
-	xxxxxxxxxx class Solution {public:    ListNode *removeNthFromEnd(ListNode *head, int n) {        ListNode* cur = head;        int len = 0;        while (cur != nullptr) {            len++;            cur = cur->next;        }        if (n > len) {            return head;        } else if (n == len) {            ListNode* curr = head;            head = head->next;            curr->next = nullptr;            return head;        } else {            ListNode* curr = head;            int i = len - n;            while (i > 1) {                curr = curr->next;                i--;            }            curr->next = curr->next->next;        }        return head;    }C++
+class Solution {
+public:
+    ListNode *removeNthFromEnd(ListNode *head, int n) {
+        ListNode *cur = head;
+        int len = 0;
+        while (cur !=
+               nullptr) {
+            len++;
+            cur = cur->next;
+        }
+        if (n > len) {
+            return head;
+        } else if (n == len) {
+            ListNode *curr = head;
+            head = head->next;
+            curr->next = nullptr;
+            return head;
+        } else {
+            ListNode *curr = head;
+            int i = len - n;
+            while (i > 1) {
+                curr = curr->next;
+                i--
+            }
+            curr->next = curr->next->next;
+        }
+        return head;
+    }
+}
 ```
 
 #### new😋
@@ -1762,9 +1790,9 @@ public:
 
 由于栈结构的特殊性，非常适合做对称匹配类的题目。
 
-### Doubts&Gains
+### :zero:Doubts&Gains
 
-
+>`stack`
 
 ### Code&Analysis
 
@@ -1883,7 +1911,13 @@ public:
 
 ### Thought
 
-回溯
+#### old
+
+这道题对于回溯的使用并不局限在回溯三部曲的固定格式，相当自由
+
+#### new
+
+栈
 
 ### Doubts&Gains
 
@@ -1891,54 +1925,13 @@ public:
 
 ### Code&Analysis
 
-递归调用 `backTracking` 函数可能导致栈溢出的问题。
+#### old
 
-当递归调用次数过多时，函数的局部变量和调用栈的信息会占用大量的栈空间，超过了系统所分配给程序的栈空间大小，从而导致栈溢出错误。
+执行时间击败100%，消耗内存击败58.67%
 
-```c++
-class Solution {
-public:
-    unordered_map<int, char> map = {{0, '{'},
-                                    {1, '}'}};
-    vector<string> res;
+#### new
 
-    string str = "{";
 
-    void backTracking(string str, int left, int right, int index, int n) {
-        int balance = left - right;
-        if (index == 2 * n && balance == 0) {
-            res.push_back(str);
-            return;
-        }
-
-        if (balance < 0) {
-            return;
-        }
-
-        for (int i = 0; i < 2; i++) {
-            str.push_back(map[i]);
-            if (i == 0) {
-                left++;
-                backTracking(str, left, right, index + 1, n);
-                left--;
-            }
-            if (i == 1) {
-                right++;
-                backTracking(str, left, right, index + 1, n);
-                right--;
-            }
-            str.pop_back();
-        }
-    }
-
-    vector<string> generateParenthesis(int n) {
-        str.clear();
-        res.clear();
-        backTracking(str, 0, 0, 1, n);
-        return res;
-    }
-};
-```
 
 ## 23.合并K个升序链表❤️
 
