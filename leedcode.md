@@ -1937,15 +1937,67 @@ public:
 
 ### Thought
 
+#### old
+
 20题的变种，将链表数组中每个链表的元素取出并放入容器，排序，插入升序链表
 
-### Doubts&Gains
+#### new
+
+priority_queue中的min_heap 对于入队和出队的规则要特别注意
+
+##### modify
 
 
+
+### :zero:Doubts&Gains
+
+> `优先队列`
 
 ### Code&Analysis❤️
 
+#### old
+
 执行时间击败81.36%，消耗内存击败18.72%
+
+```cpp
+class Solution {
+public:
+    ListNode* mergeKLists(vector<ListNode*>& lists) {
+        vector<int> vec;
+        int len = lists.size();
+
+        for (int i = 0; i < len; i++) {
+        ListNode *a = lists[i];
+
+        while (a != nullptr) {
+                vec.push_back(a->val);
+                a = a->next;
+            }
+        }
+
+        sort(vec.begin(), vec.end());
+
+        ListNode *res = nullptr;
+        ListNode* c = nullptr;
+
+        for (int n : vec) {
+            if (res == nullptr) {
+                res = new ListNode(n);
+                c = res;
+            } else {
+                c->next = new ListNode(n);
+                c = c->next;
+            }
+        }
+
+        return res;
+    }
+};
+```
+
+#### new
+
+效率其实差不多，主要是学习新的数据结构-优先队列
 
 ## 24.两两交换链表中的节点💕
 
