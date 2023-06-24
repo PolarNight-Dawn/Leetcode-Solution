@@ -2226,3 +2226,19 @@ public:
 ### Code&Analysis
 
 执行时间击败23.39%，消耗内存击败55.73%
+
+## 27.移除元素
+
+### Thought
+
+`std::remove()`和`vector.erase()`结合
+
+### Double&Gains
+
+>`std::remove()`
+
+>`vector.erase()`
+
+### Code&Analysis
+
+执行时间击败100%，消耗内存击败55.9%
