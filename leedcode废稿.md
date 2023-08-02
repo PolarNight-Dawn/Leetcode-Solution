@@ -312,5 +312,37 @@ public:
 };
 ```
 
+## 54.螺旋矩阵
 
+`WA`
 
+```c++
+class Solution {
+public:
+    std::vector<int> spiralOrder(std::vector<std::vector<int>>& matrix) {
+        std::vector<int> res;
+        int m = matrix.size();
+        int n = matrix[0].size();
+        int numTurn = (m + 1) / 2;
+
+        int cnt = 0;
+        while (cnt <= numTurn) {
+            if (m - cnt == 1 + cnt) {
+                for (int j = cnt; j < n - cnt; j++) res.push_back(matrix[cnt][j]);
+                break;
+            }
+            if (cnt == m - 2 - cnt) {
+                for (int i = 1 + cnt; i < m - cnt; i++) res.push_back(matrix[i][n - 1 - 2 * cnt]);
+                break;
+            }
+            for (int j = cnt; j < n - cnt; j++) res.push_back(matrix[cnt][j]);
+            for (int i = 1 + cnt; i < m - cnt; i++) res.push_back(matrix[i][n - 1 - 2 * cnt]);
+            for (int j = n - 2 - cnt; j >= cnt; j--) res.push_back(matrix[m - 1 - 2 * cnt][j]);
+            for (int i = m - 2 - cnt; i > cnt; i--) res.push_back(matrix[i][cnt]);
+            cnt++;
+        }
+
+        return  res;
+    }
+};
+```
