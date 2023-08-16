@@ -346,3 +346,57 @@ public:
     }
 };
 ```
+
+## 80.删除有序数组中的重复项 II
+
+ ```C++
+ class Solution {
+ public:
+     int removeDuplicates02(std::vector<int>& nums) {
+         int cnt = 0;
+         for (int i = 0; i < nums.size(); i++) {
+             for (int j = i + 1; j < nums.size(); j++) {
+                 while (nums[i] == nums[j++]) {
+                     cnt++;
+                     if (cnt >= 2) {
+                         nums.erase(nums.begin() + j - 1);
+                         cnt--;
+                     }
+                 }
+                 i = j - 1;
+             }
+         }
+ 
+         return nums.size();
+     }
+ };
+ ```
+
+## 82.删除排序链表中的重复元素 II
+
+```c++
+class Solution {
+public:
+    ListNode *deleteDuplicates(ListNode *head) {
+        ListNode *pre = nullptr;
+        ListNode *cur = head;
+        ListNode *newHead = new ListNode(0);
+        ListNode *tmp = newHead;
+        if (cur == nullptr || cur->next == nullptr) return head;
+
+        while (cur != nullptr && cur->next != nullptr) {
+            if (cur->val == cur->next->val) while (cur->next != nullptr && cur->val == cur->next->val) cur = cur->next;
+            else {
+                pre = cur;
+                tmp->next = pre;
+                tmp = tmp->next;
+            }
+            if (pre != nullptr) pre->next = cur->next;
+            cur = cur->next;
+        }
+
+        return newHead->next;
+    }
+};
+```
+
