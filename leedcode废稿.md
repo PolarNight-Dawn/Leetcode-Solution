@@ -400,3 +400,47 @@ public:
 };
 ```
 
+## 85.最大矩阵
+
+```c++
+class Solution {
+public:
+    int maximalRectangle(std::vector<std::vector<char>> &matrix) {
+        int m = matrix.size();
+        int n = matrix[0].size();
+
+        int maxSize = 0, matrixLenth = 0, matrixWidth = 0;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (matrix[i][j] == '1') {
+                    bool flag = true;
+                    matrixLenth = i + 1, matrixWidth = j + 1;
+                    while (matrixLenth < m && matrix[matrixLenth][j] == '1') matrixLenth++;
+                    while (matrixWidth < n && matrix[i][matrixWidth] == '1') matrixWidth++;
+                    if (matrixWidth - j != 1) {
+                        for (int x = i; x < matrixLenth; x++) {
+                            if (std::find(matrix[x].begin() + j, matrix[x].begin() + j + matrixLenth, '0') != matrix[x].begin() + j + matrixLenth) {
+                                flag = false;
+                                break;
+                            }
+                        }
+                    } else {
+                        for (int x = i; x < matrixLenth; x++) {
+                            if (matrix[x][j] == '0') {
+                                flag = false;
+                                break;
+                            }
+                        }
+                    }
+                    if (!flag) break;
+                    int size = (matrixLenth - i) * (matrixWidth - j);
+                    maxSize = std::max(size, maxSize);
+                }
+            }
+        }
+
+        return maxSize;
+    }
+};
+```
+
